@@ -2,8 +2,8 @@ module Kintail.LiftOperators exposing (..)
 
 
 (||>) : ( a, b ) -> (a -> b -> c) -> c
-(||>) ( x, y ) f =
-    f x y
+(||>) ( v1, v2 ) f =
+    f v1 v2
 infixl 0 ||>
 
 
@@ -14,8 +14,13 @@ infixr 0 <||
 
 
 (|?>) : ( a, Maybe b ) -> (a -> b -> c) -> Maybe c
-(|?>) ( x, maybeY ) f =
-    Maybe.map (\y -> f x y) maybeY
+(|?>) ( v1, m2 ) f =
+    case m2 of
+        Just v2 ->
+            Just (f v1 v2)
+
+        Nothing ->
+            Nothing
 infixl 0 |?>
 
 
@@ -26,8 +31,13 @@ infixr 0 <|?
 
 
 (?|>) : ( Maybe a, b ) -> (a -> b -> c) -> Maybe c
-(?|>) ( maybeX, y ) f =
-    Maybe.map (\x -> f x y) maybeX
+(?|>) ( m1, v2 ) f =
+    case m1 of
+        Just v1 ->
+            Just (f v1 v2)
+
+        Nothing ->
+            Nothing
 infixl 0 ?|>
 
 
@@ -38,8 +48,13 @@ infixr 0 <?|
 
 
 (??>) : ( Maybe a, Maybe b ) -> (a -> b -> c) -> Maybe c
-(??>) ( maybeX, maybeY ) f =
-    Maybe.map2 f maybeX maybeY
+(??>) args f =
+    case args of
+        ( Just v1, Just v2 ) ->
+            Just (f v1 v2)
+
+        _ ->
+            Nothing
 infixl 0 ??>
 
 
@@ -50,8 +65,8 @@ infixr 0 <??
 
 
 (||=?>) : ( a, b ) -> (a -> b -> Maybe c) -> Maybe c
-(||=?>) ( x, y ) f =
-    f x y
+(||=?>) ( v1, v2 ) f =
+    f v1 v2
 infixl 0 ||=?>
 
 
@@ -62,8 +77,13 @@ infixr 0 <||=?
 
 
 (|?=?>) : ( a, Maybe b ) -> (a -> b -> Maybe c) -> Maybe c
-(|?=?>) ( x, maybeY ) f =
-    Maybe.andThen (\y -> f x y) maybeY
+(|?=?>) ( v1, m2 ) f =
+    case m2 of
+        Just v2 ->
+            f v1 v2
+
+        Nothing ->
+            Nothing
 infixl 0 |?=?>
 
 
@@ -74,8 +94,13 @@ infixr 0 <|?=?
 
 
 (?|=?>) : ( Maybe a, b ) -> (a -> b -> Maybe c) -> Maybe c
-(?|=?>) ( maybeX, y ) f =
-    Maybe.andThen (\x -> f x y) maybeX
+(?|=?>) ( m1, v2 ) f =
+    case m1 of
+        Just v1 ->
+            f v1 v2
+
+        Nothing ->
+            Nothing
 infixl 0 ?|=?>
 
 
